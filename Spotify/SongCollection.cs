@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public class SongCollection : iPlayable
     {
         public string Title { get; set; }
         private List<iPlayable> Playables;
         public List<iPlayable> playables { get { return Playables; } set { Playables = value; } }
-        public int Length { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int Length { get; set; }
 
         public SongCollection(string title)
         {

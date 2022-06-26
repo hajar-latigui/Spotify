@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public class Client
     {
@@ -13,13 +7,14 @@ namespace Spotify
         public bool IsPlaying { get; set; }
         public bool Shuffle { get; set; }
         public bool IsRepeating { get; set; }
-        private Playlist SelectedPlaylist ;
+        private Playlist SelectedPlaylist;
         public Person activeUser { get; set; }
+        public Album SelectedAlbum { get; set; }
         private Person ActiveUser { get { return activeUser; } set { activeUser = value; } }
-        private List<Album> Albums ;
-        private List<Person> Users ;
-        private List<Song> Songs ;
-        private Person User;
+        private List<Album> Albums;
+        private List<Person> Users;
+        private List<Song> Songs;
+        public Person User;
         private Song currentSong;
 
 
@@ -27,7 +22,7 @@ namespace Spotify
         {
             this.Albums = album;
             this.Songs = song;
-            this.Users = users ;
+            this.Users = users;
             this.Shuffle = false;
             this.IsRepeating = false;
             this.IsPlaying = false;
@@ -41,21 +36,26 @@ namespace Spotify
 
         public void ShowAllAlbums()
         {
+            int i = 0;
+            Console.WriteLine("Albums: ");
             foreach (var album in Albums)
             {
-                Console.WriteLine(album.ToString());
+                Console.WriteLine(i + ": " + album.Title);
+                i++;
             }
+            Console.WriteLine();
         }
+
         public void SelectAlbum(int id)
         {
-            Album album = Albums.ElementAt(id);
+            SelectedAlbum = Albums.ElementAt(id);
 
         }
         public void ShowAllSongs()
         {
             foreach (var song in Songs)
             {
-                Console.WriteLine(song.ToString());
+                Console.WriteLine(song.Title);
             }
         }
         public void SelectSong(int id)
@@ -64,19 +64,21 @@ namespace Spotify
         }
         public void ShowAllUsers()
         {
+            int i = 0;
             foreach (var user in this.Users)
             {
-                Console.WriteLine(user.Name);
+                Console.WriteLine(i + ": " + user.Name);
+                i++;
             }
         }
         public void SelectUser(int id)
         {
-           this.User = this.Users.ElementAt(id);
+            this.User = this.Users.ElementAt(id);
         }
 
         public void ShowUserPlaylists()
         {
-            List<Playlist> userPlaylists =  User.ShowPlaylists();
+            List<Playlist> userPlaylists = User.ShowPlaylists();
             foreach (var playlist in userPlaylists)
             {
                 Console.WriteLine("Title: ", playlist.Title);
@@ -87,17 +89,17 @@ namespace Spotify
             this.SelectedPlaylist = User.SelectPlaylist(id);
         }
 
-        
+
 
         public void Play()
         {
-            CurrentlyPlaying = new Song("Hello", new List<Artist> { new Artist("Adele", new List<Album> { })},Genre.Pop);
             this.IsPlaying = true;
             CurrentlyPlaying.Play();
         }
         public void Stop()
         {
             this.IsPlaying = false;
+            CurrentlyPlaying.Stop();
         }
         public void Pause()
         {
@@ -106,7 +108,8 @@ namespace Spotify
         }
         public void NextSong()
         {
-            var currentSong = SelectedPlaylist.ShowPlayables();
+            this.IsPlaying = true;
+            CurrentlyPlaying.Play();
         }
         public void SetShuffle()
         {
@@ -122,11 +125,12 @@ namespace Spotify
         public void CreatePlaylist(string title)
         {
             activeUser.CreatePlaylist(title);
+
         }
 
         public void ShowPlaylists()
         {
-           List<Playlist> userPlaylists = activeUser.ShowPlaylists();
+            List<Playlist> userPlaylists = activeUser.ShowPlaylists();
             foreach (var playlist in userPlaylists)
             {
                 Console.WriteLine("Title: ", playlist.Title);
@@ -147,13 +151,24 @@ namespace Spotify
 
         public void ShowSongsInPlaylist()
         {
-
             this.SelectedPlaylist.ShowPlayables();
         }
-        public void AddToPlaylist(int id)
+
+        public void AddToPlaylist(int id, String Type)
         {
-            Song song = Songs.ElementAt(id);
-            activeUser.AddToPlaylist(song);
+            if (Type == "song")
+            {
+                Song song = Songs.ElementAt(id);
+                activeUser.AddToPlaylist((iPlayable)song);
+            }
+            else if (Type == "album")
+            {
+                Album album = Albums.ElementAt(id);
+                foreach (var song in album.Songs)
+                {
+                    activeUser.AddToPlaylist((iPlayable)song);
+                }
+            }
         }
 
         public void RemoveFromPlaylist(int id)
@@ -163,12 +178,17 @@ namespace Spotify
         }
         public void ShowFriends()
         {
-            activeUser.ShowFriends();
+            List<Person> friends = activeUser.ShowFriends();
+            foreach (var person in friends)
+            {
+                Console.WriteLine(person.Name);
+            }
         }
 
-        public void SelectFriend()
+        public void SelectFriend(int id)
         {
-           
+            // List<Person> friends = activeUser.ShowFriends;
+            Person friend = Users.ElementAt(id);
         }
         public void AddFriend(int id)
         {

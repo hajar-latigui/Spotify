@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public class Song : iPlayable
     {
         public string Title { get; set; }
         public List<Artist> Artists { get; set; }
         public Genre SongGenre { get; set; }
-        public int Length { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int Length { get; set; }
 
         public Song(string title, List<Artist> artists, Genre songGenre)
         {
-            Title = title;
-            Artists = artists;
-            SongGenre = songGenre;
+            this.Title = title;
+            this.Artists = artists;
+            this.SongGenre = songGenre;
+
+            foreach (var artist in artists)
+            {
+                artist.AddSong(this);
+            }
         }
 
         public override string? ToString()
@@ -32,7 +31,6 @@ namespace Spotify
 
         public void Stop()
         {
-            throw new NotImplementedException();
         }
 
         public void Pause()
@@ -42,7 +40,7 @@ namespace Spotify
 
         public void Next()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("is playing :");
         }
     }
 }

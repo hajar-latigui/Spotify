@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public enum Genre
     {
-        Pop
+        POP,
+        DRUM_AND_BASS,
+
     }
 }

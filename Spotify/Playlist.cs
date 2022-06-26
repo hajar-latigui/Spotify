@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
-    public class Playlist: SongCollection
+    public class Playlist : SongCollection
     {
         public int Id { get; set; }
         private Person owner;

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public class Person
     {
         public string Name { get; set; }
         public List<Person> Friends { get; set; }
         public List<Playlist> Playlists { get; set; }
-        private Playlist _playlist;
+        public Playlist CurrentPlaylist { get; set; }
 
         public Person(string name)
         {
             this.Name = name;
+            this.Friends = new List<Person>();
+            this.Playlists = new List<Playlist>();
         }
 
         public List<Person> ShowFriends()
@@ -41,14 +37,16 @@ namespace Spotify
         public Playlist SelectPlaylist(int id)
         {
             Playlist playlist = Playlists.ElementAt(id);
-            this._playlist = playlist;
+            CurrentPlaylist = playlist;
             return playlist;
         }
 
         public Playlist CreatePlaylist(string title)
         {
             Playlist newPlaylist = new(this, title);
+            newPlaylist.playables = new List<iPlayable>();
             Playlists.Add(newPlaylist);
+            CurrentPlaylist = newPlaylist;
             return newPlaylist;
         }
 
@@ -59,17 +57,28 @@ namespace Spotify
 
         public void AddToPlaylist(iPlayable number)
         {
-            _playlist.Add(number);
-         }
+            CurrentPlaylist.playables.Add(number);
+        }
 
         public void RemoveFromPlaylist(iPlayable number)
-        { 
-            _playlist.Remove(number);
+        {
+            CurrentPlaylist.playables.Remove(number);
+        }
+
+        public string GetNames()
+        {
+            foreach (var friend in Friends)
+            {
+                return friend.Name;
+            }
+            return "";
         }
 
         public override string? ToString()
         {
-            return "User: " + this.Name;
+            return "Name: " + this.Name +
+                "Friends: " + GetNames();
+
         }
     }
 }

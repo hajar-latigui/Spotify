@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spotify
+﻿namespace Spotify
 {
     public class Artist
     {
@@ -14,24 +8,25 @@ namespace Spotify
 
         public Artist(string name, List<Album> albums)
         {
-            Name = name;
-            Albums = albums;
+            this.Name = name;
+            this.Albums = albums;
+            this.Songs = new List<Song>();
         }
 
         public void AddSong(Song song)
         {
-            Songs.Add(song);
+            this.Songs.Add(song);
         }
 
         public void AddAlbum(Album album)
         {
-            Albums.Add(album);
+            this.Albums.Add(album);
         }
 
         public override string? ToString()
         {
             return "Artist: " + this.Name + "\n" +
-               "Albums: " + this.Albums + "\n" ;
+               "Albums: " + this.Albums + "\n";
         }
     }
 }
