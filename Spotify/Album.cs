@@ -4,13 +4,12 @@
     {
 
         public List<Artist> Artists { get; set; }
-        public List<Song> Songs { get; set; }
 
         public Album(List<Artist> artists, string title, List<Song> songs) : base(title)
         {
             this.Artists = artists;
             this.Title = title;
-            this.Songs = songs;
+            this.playables = new List<iPlayable>(songs);
 
             foreach (var artist in artists)
             {

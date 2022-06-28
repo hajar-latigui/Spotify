@@ -7,11 +7,12 @@
         public Genre SongGenre { get; set; }
         public int Length { get; set; }
 
-        public Song(string title, List<Artist> artists, Genre songGenre)
+        public Song(string title, List<Artist> artists,int lenght, Genre songGenre)
         {
             this.Title = title;
             this.Artists = artists;
             this.SongGenre = songGenre;
+            this.Length = lenght;
 
             foreach (var artist in artists)
             {
@@ -19,28 +20,40 @@
             }
         }
 
+        public string getArtist()
+        {
+            foreach (var artist in Artists)
+            {
+                return artist.Name + ", ";
+            }
+            return "";
+        }
+
         public override string? ToString()
         {
-            return base.ToString();
+            return "Title: " + Title + "\n"+
+                "Artists: " + getArtist() + "\n"+
+                "Length: " + Length + "\n";
         }
 
         public void Play()
         {
-            Console.WriteLine("is playing :" + Title);
+            Console.WriteLine("is playing :\n" + ToString());
         }
 
         public void Stop()
         {
+            Console.WriteLine("Stopped Playing :\n" + ToString());
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("is pausing :\n" + ToString());
         }
 
         public void Next()
         {
-            Console.WriteLine("is playing :");
+            Console.WriteLine("is playing :\n" + ToString());
         }
     }
 }

@@ -43,10 +43,8 @@
 
         public Playlist CreatePlaylist(string title)
         {
-            Playlist newPlaylist = new(this, title);
-            newPlaylist.playables = new List<iPlayable>();
+            Playlist newPlaylist = new Playlist(this, title);
             Playlists.Add(newPlaylist);
-            CurrentPlaylist = newPlaylist;
             return newPlaylist;
         }
 
@@ -55,14 +53,16 @@
             Playlists.Remove(list);
         }
 
-        public void AddToPlaylist(iPlayable number)
+        public void AddToPlaylist(iPlayable number, Playlist cur)
         {
-            CurrentPlaylist.playables.Add(number);
+            Playlist p = Playlists.Where(x => x.Title.Contains(cur.Title)).Single();
+            p.Add(number);
         }
 
-        public void RemoveFromPlaylist(iPlayable number)
+        public void RemoveFromPlaylist(iPlayable number,Playlist cur)
         {
-            CurrentPlaylist.playables.Remove(number);
+            Playlist p = Playlists.Where(x => x.Title.Contains(cur.Title)).Single();
+            p.Remove(number);
         }
 
         public string GetNames()
@@ -73,11 +73,20 @@
             }
             return "";
         }
+        public string getPlaylists()
+        {
+            foreach (var list in Playlists)
+            {
+                return list.Title + "\n";
+            }
+            return "";
+        }
 
         public override string? ToString()
         {
-            return "Name: " + this.Name +
-                "Friends: " + GetNames();
+            return "Name: " + this.Name + "\n"+
+                "Friends: " + GetNames() + "\n"+
+                "Playlists" + getPlaylists();
 
         }
     }

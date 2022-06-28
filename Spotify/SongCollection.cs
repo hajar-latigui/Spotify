@@ -6,10 +6,12 @@
         private List<iPlayable> Playables;
         public List<iPlayable> playables { get { return Playables; } set { Playables = value; } }
         public int Length { get; set; }
+        private int index = 0;
 
         public SongCollection(string title)
         {
-            Title = title;
+            this.Title = title;
+            this.playables = new List<iPlayable>();
         }
 
         public void Add(iPlayable playable)
@@ -34,7 +36,7 @@
 
         public void Play()
         {
-            throw new NotImplementedException();
+            playables[index].Play();
         }
 
         public void Stop()
@@ -49,7 +51,11 @@
 
         public void Next()
         {
-            throw new NotImplementedException();
+            if(index <= playables.Count)
+            {
+                index++;
+                Play();
+            }
         }
     }
 

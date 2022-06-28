@@ -11,6 +11,7 @@
         public Person activeUser { get; set; }
         public Album SelectedAlbum { get; set; }
         private Person ActiveUser { get { return activeUser; } set { activeUser = value; } }
+        private List<Playlist> userPlaylists;
         private List<Album> Albums;
         private List<Person> Users;
         private List<Song> Songs;
@@ -37,7 +38,6 @@
         public void ShowAllAlbums()
         {
             int i = 0;
-            Console.WriteLine("Albums: ");
             foreach (var album in Albums)
             {
                 Console.WriteLine(i + ": " + album.Title);
@@ -49,7 +49,6 @@
         public void SelectAlbum(int id)
         {
             SelectedAlbum = Albums.ElementAt(id);
-
         }
         public void ShowAllSongs()
         {
@@ -78,12 +77,18 @@
 
         public void ShowUserPlaylists()
         {
-            List<Playlist> userPlaylists = User.ShowPlaylists();
+            userPlaylists = User.ShowPlaylists();
             foreach (var playlist in userPlaylists)
             {
-                Console.WriteLine("Title: ", playlist.Title);
+                Console.WriteLine("Title: "+ playlist.Title);
+            }
+
+            foreach (var list in userPlaylists.SelectMany(k => k.playables)) 
+            {
+                Console.WriteLine("Title: " + list.ToString());
             }
         }
+
         public void SelectUserPlaylist(int id)
         {
             this.SelectedPlaylist = User.SelectPlaylist(id);
@@ -124,16 +129,18 @@
 
         public void CreatePlaylist(string title)
         {
-            activeUser.CreatePlaylist(title);
+           this.SelectedPlaylist =  this.activeUser.CreatePlaylist(title);
 
         }
 
         public void ShowPlaylists()
         {
-            List<Playlist> userPlaylists = activeUser.ShowPlaylists();
+            userPlaylists = activeUser.ShowPlaylists();
+            int i = 0;
             foreach (var playlist in userPlaylists)
             {
-                Console.WriteLine("Title: ", playlist.Title);
+                Console.WriteLine( $"{i} Title: {playlist.Title}");
+                i++;
             }
 
         }
@@ -151,22 +158,31 @@
 
         public void ShowSongsInPlaylist()
         {
-            this.SelectedPlaylist.ShowPlayables();
+            Playlist playlist = this.SelectedPlaylist;
+            foreach (var song in playlist.playables)
+            {
+                Song son = song as Song;
+                Console.WriteLine(son.Title);
+            }
         }
 
         public void AddToPlaylist(int id, String Type)
         {
+            if(userPlaylists == null) {
+                Console.WriteLine("Add a Playlist first");
+                return;
+            }
             if (Type == "song")
             {
                 Song song = Songs.ElementAt(id);
-                activeUser.AddToPlaylist((iPlayable)song);
+                activeUser.AddToPlaylist((iPlayable)song, this.SelectedPlaylist);
             }
             else if (Type == "album")
             {
                 Album album = Albums.ElementAt(id);
-                foreach (var song in album.Songs)
+                foreach (var song in album.playables)
                 {
-                    activeUser.AddToPlaylist((iPlayable)song);
+                    activeUser.AddToPlaylist(song, this.SelectedPlaylist);
                 }
             }
         }
@@ -174,7 +190,7 @@
         public void RemoveFromPlaylist(int id)
         {
             Song song = Songs.ElementAt(id);
-            activeUser.RemoveFromPlaylist((iPlayable)song);
+            activeUser.RemoveFromPlaylist((iPlayable)song, this.SelectedPlaylist);
         }
         public void ShowFriends()
         {
@@ -201,8 +217,6 @@
             var user = Users.ElementAt(id);
             activeUser.RemoveFriend(user);
         }
-
-
 
     }
 }
